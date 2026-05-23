@@ -47,7 +47,7 @@ const CONTACT = [
   { label: "LinkedIn", value: "linkedin.com/in/abhishek-singh-8bb183251", icon: "in", href: "https://www.linkedin.com/in/abhishek-singh-8bb183251/" },
 ];
 
-function useInView(threshold = 0.15) {
+function useInView(threshold = 0.1) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
@@ -73,21 +73,21 @@ function SkillBar({ name, level, cat, icon, color, inView, delay }) {
         background: "rgba(255,255,255,0.03)",
         border: "1px solid rgba(255,255,255,0.07)",
         borderRadius: 14,
-        padding: "20px 24px",
+        padding: "18px 20px",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
         <span style={{
-          fontSize: 18, width: 38, height: 38, display: "flex", alignItems: "center",
-          justifyContent: "center", borderRadius: 10,
+          width: 36, height: 36, display: "flex", alignItems: "center",
+          justifyContent: "center", borderRadius: 10, flexShrink: 0,
           background: `${color}15`, color, fontFamily: "'JetBrains Mono', monospace",
-          fontWeight: 700, fontSize: 13,
+          fontWeight: 700, fontSize: 12,
         }}>{icon}</span>
-        <div>
-          <div style={{ color: "#e8eaf0", fontWeight: 600, fontSize: 15 }}>{name}</div>
-          <div style={{ color: "#6b7280", fontSize: 12, fontFamily: "'JetBrains Mono', monospace" }}>{cat}</div>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ color: "#e8eaf0", fontWeight: 600, fontSize: 14, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{name}</div>
+          <div style={{ color: "#6b7280", fontSize: 11, fontFamily: "'JetBrains Mono', monospace" }}>{cat}</div>
         </div>
-        <div style={{ marginLeft: "auto", color: ACCENT, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: 14 }}>
+        <div style={{ marginLeft: "auto", color: ACCENT, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
           {inView ? level : 0}%
         </div>
       </div>
@@ -117,36 +117,36 @@ function ProjectCard({ title, desc, tags, color, icon, badge, inView, delay }) {
         background: hovered ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.025)",
         border: `1px solid ${hovered ? color + "50" : "rgba(255,255,255,0.07)"}`,
         borderRadius: 18,
-        padding: "28px 28px 24px",
+        padding: "24px 22px 20px",
         cursor: "default",
         boxShadow: hovered ? `0 0 40px ${color}18` : "none",
         display: "flex", flexDirection: "column",
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 18 }}>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16, gap: 8 }}>
         <div style={{
-          width: 52, height: 52, borderRadius: 14,
+          width: 48, height: 48, borderRadius: 14, flexShrink: 0,
           background: `${color}15`, border: `1px solid ${color}30`,
           display: "flex", alignItems: "center", justifyContent: "center",
-          color, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: 22,
+          color, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: 20,
         }}>{icon}</div>
         <span style={{
-          fontSize: 11, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600,
+          fontSize: 10, fontFamily: "'JetBrains Mono', monospace", fontWeight: 600,
           padding: "4px 10px", borderRadius: 99,
           background: `${color}15`, color, border: `1px solid ${color}30`,
-          letterSpacing: "0.05em",
+          letterSpacing: "0.05em", whiteSpace: "nowrap",
         }}>{badge}</span>
       </div>
       <div style={{
         color: "#e8eaf0", fontFamily: "'Syne', sans-serif",
-        fontWeight: 700, fontSize: 20, marginBottom: 10,
+        fontWeight: 700, fontSize: 18, marginBottom: 10,
       }}>{title}</div>
-      <div style={{ color: "#9ca3af", fontSize: 14, lineHeight: 1.75, marginBottom: 22, flex: 1 }}>{desc}</div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+      <div style={{ color: "#9ca3af", fontSize: 14, lineHeight: 1.75, marginBottom: 20, flex: 1 }}>{desc}</div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
         {tags.map(t => (
           <span key={t} style={{
-            fontSize: 11, fontFamily: "'JetBrains Mono', monospace",
-            padding: "4px 10px", borderRadius: 99,
+            fontSize: 10, fontFamily: "'JetBrains Mono', monospace",
+            padding: "3px 9px", borderRadius: 99,
             background: "rgba(255,255,255,0.05)", color: "#9ca3af",
             border: "1px solid rgba(255,255,255,0.09)",
           }}>{t}</span>
@@ -170,6 +170,7 @@ export default function Portfolio() {
   const [scrolled, setScrolled] = useState(false);
   const [typed, setTyped] = useState("");
   const [heroVisible, setHeroVisible] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const [skillsRef, skillsInView] = useInView();
   const [projRef, projInView] = useInView();
@@ -187,7 +188,6 @@ export default function Portfolio() {
     link1.href = "https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap";
     link1.rel = "stylesheet";
     document.head.appendChild(link1);
-
     const t = setTimeout(() => setHeroVisible(true), 100);
     return () => clearTimeout(t);
   }, []);
@@ -223,52 +223,19 @@ export default function Portfolio() {
 
   const scrollTo = (id) => {
     document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const styles = {
-    root: {
-      fontFamily: "'DM Sans', sans-serif",
-      background: "#07080f",
-      color: "#e8eaf0",
-      minHeight: "100vh",
-      overflowX: "hidden",
-    },
-    nav: {
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      padding: "0 48px", height: 68,
-      background: scrolled ? "rgba(7,8,15,0.92)" : "transparent",
-      backdropFilter: scrolled ? "blur(16px)" : "none",
-      borderBottom: scrolled ? "1px solid rgba(255,255,255,0.07)" : "1px solid transparent",
-      transition: "all 0.4s ease",
-    },
-    logo: {
-      fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 22,
-      background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
-      WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-      cursor: "pointer",
-    },
-    navLinks: { display: "flex", gap: 36, listStyle: "none", margin: 0, padding: 0 },
-    section: { position: "relative", padding: "100px 48px", maxWidth: 1100, margin: "0 auto" },
-    sectionLabel: {
-      fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 600,
-      color: ACCENT, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12,
-    },
-    sectionTitle: {
-      fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(32px, 5vw, 52px)",
-      lineHeight: 1.1, marginBottom: 16,
-    },
+    setMenuOpen(false);
   };
 
   return (
-    <div style={styles.root}>
+    <div style={{ fontFamily: "'DM Sans', sans-serif", background: "#07080f", color: "#e8eaf0", minHeight: "100vh", overflowX: "hidden" }}>
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        body { background: #07080f; }
+        body { background: #07080f; overflow-x: hidden; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0d1117; }
         ::-webkit-scrollbar-thumb { background: ${ACCENT}50; border-radius: 99px; }
+
         .nav-link {
           color: #9ca3af; font-size: 14px; font-weight: 500; cursor: pointer;
           text-decoration: none; position: relative; padding-bottom: 3px;
@@ -280,6 +247,7 @@ export default function Portfolio() {
         }
         .nav-link:hover { color: ${ACCENT}; }
         .nav-link:hover::after { width: 100%; }
+
         .btn-primary {
           padding: 14px 32px; border-radius: 12px; border: none; cursor: pointer;
           font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 15px;
@@ -287,6 +255,7 @@ export default function Portfolio() {
           color: #07080f; transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px ${ACCENT}40; }
+
         .btn-secondary {
           padding: 14px 32px; border-radius: 12px; cursor: pointer;
           font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 15px;
@@ -294,108 +263,164 @@ export default function Portfolio() {
           border: 1.5px solid ${ACCENT}50; transition: all 0.2s ease;
         }
         .btn-secondary:hover { background: ${ACCENT}12; border-color: ${ACCENT}; transform: translateY(-2px); }
+
         .contact-card:hover { border-color: ${ACCENT}50 !important; background: rgba(59,245,199,0.04) !important; }
+
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
         @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.85)} }
-        @keyframes fade-up { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; }
+
+        .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .about-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .hero-stats { display: flex; gap: 32px; margin-top: 60px; flex-wrap: wrap; }
+        .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+        .section-pad { padding: 90px 48px; }
+        .nav-desktop { display: flex; }
+        .nav-mobile { display: none; }
+        .hamburger { display: none; }
+        .mobile-menu { display: none; }
+
+        @media (max-width: 900px) {
+          .projects-grid { grid-template-columns: repeat(2, 1fr); }
+          .about-grid { grid-template-columns: 1fr; gap: 40px; }
+          .section-pad { padding: 70px 24px; }
+        }
+
+        @media (max-width: 640px) {
+          .skills-grid { grid-template-columns: 1fr; }
+          .projects-grid { grid-template-columns: 1fr; }
+          .about-cards { grid-template-columns: 1fr 1fr; }
+          .hero-stats { gap: 20px; }
+          .hero-buttons { flex-direction: column; }
+          .hero-buttons .btn-primary, .hero-buttons .btn-secondary { width: 100%; text-align: center; }
+          .section-pad { padding: 60px 20px; }
+          .nav-desktop { display: none; }
+          .hamburger { display: flex; }
+          .mobile-menu { display: block; }
+        }
       `}</style>
 
       {/* NAV */}
-      <nav style={styles.nav}>
-        <div style={styles.logo}>{"<AS />"}</div>
-        <ul style={styles.navLinks}>
+      <nav style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "0 24px", height: 64,
+        background: scrolled ? "rgba(7,8,15,0.95)" : "transparent",
+        backdropFilter: scrolled ? "blur(16px)" : "none",
+        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.07)" : "1px solid transparent",
+        transition: "all 0.4s ease",
+      }}>
+        <div style={{
+          fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 20,
+          background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
+          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", cursor: "pointer",
+        }} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>{"<AS />"}</div>
+
+        {/* Desktop nav */}
+        <ul className="nav-desktop" style={{ gap: 32, listStyle: "none" }}>
           {NAV_LINKS.map(l => (
             <li key={l}><a className="nav-link" onClick={() => scrollTo(l)}>{l}</a></li>
           ))}
         </ul>
-        <button className="btn-primary" style={{ padding: "10px 22px", fontSize: 13, borderRadius: 9 }}
-          onClick={() => scrollTo("Contact")}>
-          Hire Me
+        <button className="btn-primary nav-desktop" style={{ padding: "9px 20px", fontSize: 13, borderRadius: 9 }}
+          onClick={() => scrollTo("Contact")}>Hire Me</button>
+
+        {/* Hamburger */}
+        <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)} style={{
+          background: "none", border: "none", cursor: "pointer", padding: 8,
+          display: "flex", flexDirection: "column", gap: 5,
+        }}>
+          <span style={{ width: 22, height: 2, background: menuOpen ? ACCENT : "#9ca3af", borderRadius: 2, transition: "all 0.3s", transform: menuOpen ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
+          <span style={{ width: 22, height: 2, background: menuOpen ? ACCENT : "#9ca3af", borderRadius: 2, transition: "all 0.3s", opacity: menuOpen ? 0 : 1 }} />
+          <span style={{ width: 22, height: 2, background: menuOpen ? ACCENT : "#9ca3af", borderRadius: 2, transition: "all 0.3s", transform: menuOpen ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
         </button>
       </nav>
+
+      {/* Mobile Menu */}
+      <div className="mobile-menu" style={{
+        position: "fixed", top: 64, left: 0, right: 0, zIndex: 99,
+        background: "rgba(7,8,15,0.98)", backdropFilter: "blur(20px)",
+        borderBottom: `1px solid rgba(255,255,255,0.07)`,
+        padding: menuOpen ? "20px 24px 24px" : "0 24px",
+        maxHeight: menuOpen ? 300 : 0,
+        overflow: "hidden",
+        transition: "all 0.35s ease",
+      }}>
+        {NAV_LINKS.map(l => (
+          <div key={l} onClick={() => scrollTo(l)} style={{
+            padding: "14px 0", color: "#9ca3af", fontSize: 16, fontWeight: 500,
+            borderBottom: "1px solid rgba(255,255,255,0.05)", cursor: "pointer",
+            transition: "color 0.2s",
+          }}
+            onMouseEnter={e => e.target.style.color = ACCENT}
+            onMouseLeave={e => e.target.style.color = "#9ca3af"}
+          >{l}</div>
+        ))}
+        <button className="btn-primary" style={{ marginTop: 16, width: "100%", padding: "12px", fontSize: 14 }}
+          onClick={() => scrollTo("Contact")}>Hire Me</button>
+      </div>
 
       {/* HERO */}
       <section style={{
         minHeight: "100vh", display: "flex", alignItems: "center",
-        position: "relative", overflow: "hidden", padding: "0 48px",
+        position: "relative", overflow: "hidden", padding: "0 24px",
       }}>
-        <Orb style={{ width: 500, height: 500, background: `${ACCENT}18`, top: -100, right: -100, animation: "float 8s ease-in-out infinite" }} />
-        <Orb style={{ width: 300, height: 300, background: `${ACCENT2}15`, bottom: 50, left: -80, animation: "float 10s ease-in-out infinite 2s" }} />
-        <Orb style={{ width: 200, height: 200, background: "#a78bfa18", top: "40%", right: "30%", animation: "float 7s ease-in-out infinite 1s" }} />
+        <Orb style={{ width: 400, height: 400, background: `${ACCENT}15`, top: -80, right: -80, animation: "float 8s ease-in-out infinite" }} />
+        <Orb style={{ width: 250, height: 250, background: `${ACCENT2}12`, bottom: 50, left: -60, animation: "float 10s ease-in-out infinite 2s" }} />
 
         <div style={{
           position: "absolute", inset: 0, zIndex: 0,
-          backgroundImage: `
-            linear-gradient(rgba(59,245,199,0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(59,245,199,0.04) 1px, transparent 1px)
-          `,
+          backgroundImage: `linear-gradient(rgba(59,245,199,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(59,245,199,0.04) 1px, transparent 1px)`,
           backgroundSize: "60px 60px",
-          mask: "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
+          maskImage: "linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)",
         }} />
 
         <div style={{ position: "relative", zIndex: 1, maxWidth: 1100, margin: "0 auto", width: "100%", paddingTop: 80 }}>
           <div style={{
-            display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 28,
-            padding: "8px 18px", borderRadius: 99,
+            display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 24,
+            padding: "7px 16px", borderRadius: 99,
             background: `${ACCENT}12`, border: `1px solid ${ACCENT}30`,
             opacity: heroVisible ? 1 : 0, transform: heroVisible ? "translateY(0)" : "translateY(20px)",
             transition: "all 0.8s ease",
           }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: ACCENT, animation: "pulse-dot 2s infinite" }} />
-            <span style={{ color: ACCENT, fontSize: 13, fontFamily: "'JetBrains Mono', monospace" }}>
-              Available for opportunities
-            </span>
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: ACCENT, animation: "pulse-dot 2s infinite", flexShrink: 0 }} />
+            <span style={{ color: ACCENT, fontSize: 12, fontFamily: "'JetBrains Mono', monospace" }}>Available for opportunities</span>
           </div>
 
           <h1 style={{
             fontFamily: "'Syne', sans-serif", fontWeight: 800,
-            fontSize: "clamp(42px, 8vw, 82px)", lineHeight: 1.05, marginBottom: 20,
+            fontSize: "clamp(38px, 8vw, 82px)", lineHeight: 1.05, marginBottom: 18,
             opacity: heroVisible ? 1 : 0, transform: heroVisible ? "translateY(0)" : "translateY(30px)",
             transition: "all 0.9s ease 0.1s",
           }}>
             Hello, I'm<br />
-            <span style={{
-              background: `linear-gradient(135deg, ${ACCENT} 0%, #00c4a8 50%, ${ACCENT2} 100%)`,
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-            }}>
+            <span style={{ background: `linear-gradient(135deg, ${ACCENT} 0%, #00c4a8 50%, ${ACCENT2} 100%)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               Abhishek Singh
             </span>
           </h1>
 
           <div style={{
-            display: "flex", alignItems: "center", gap: 10, marginBottom: 28,
+            display: "flex", alignItems: "center", gap: 8, marginBottom: 24, flexWrap: "wrap",
             opacity: heroVisible ? 1 : 0, transform: heroVisible ? "translateY(0)" : "translateY(30px)",
             transition: "all 0.9s ease 0.2s",
           }}>
-            <span style={{
-              fontFamily: "'JetBrains Mono', monospace", fontSize: "clamp(18px, 3vw, 26px)",
-              fontWeight: 600, color: "#9ca3af",
-            }}>// </span>
-            <span style={{
-              fontFamily: "'Syne', sans-serif", fontSize: "clamp(18px, 3vw, 26px)",
-              fontWeight: 700, color: "#c9ccd6",
-            }}>{typed}</span>
-            <span style={{
-              width: 3, height: "1.2em", background: ACCENT, display: "inline-block",
-              animation: "pulse-dot 0.8s steps(1) infinite", borderRadius: 2,
-            }} />
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "clamp(16px, 3vw, 24px)", fontWeight: 600, color: "#9ca3af" }}>// </span>
+            <span style={{ fontFamily: "'Syne', sans-serif", fontSize: "clamp(16px, 3vw, 24px)", fontWeight: 700, color: "#c9ccd6" }}>{typed}</span>
+            <span style={{ width: 3, height: "1.2em", background: ACCENT, display: "inline-block", animation: "pulse-dot 0.8s steps(1) infinite", borderRadius: 2 }} />
           </div>
 
           <p style={{
-            color: "#6b7280", fontSize: "clamp(15px, 2vw, 18px)", lineHeight: 1.75,
-            maxWidth: 580, marginBottom: 44,
+            color: "#6b7280", fontSize: "clamp(14px, 2vw, 17px)", lineHeight: 1.8,
+            maxWidth: 560, marginBottom: 36,
             opacity: heroVisible ? 1 : 0, transform: heroVisible ? "translateY(0)" : "translateY(30px)",
             transition: "all 0.9s ease 0.3s",
           }}>
-            I build end-to-end web applications — clean React UIs connected to
-            Spring Boot APIs, backed by structured MySQL databases. Fresh grad,
-            eager to contribute and grow.
+            I build end-to-end web applications — clean React UIs connected to Spring Boot APIs, backed by structured MySQL databases. Fresh grad, eager to contribute and grow.
           </p>
 
-          <div style={{
-            display: "flex", gap: 16, flexWrap: "wrap",
+          <div className="hero-buttons" style={{
             opacity: heroVisible ? 1 : 0, transform: heroVisible ? "translateY(0)" : "translateY(30px)",
             transition: "all 0.9s ease 0.4s",
           }}>
@@ -403,14 +428,11 @@ export default function Portfolio() {
             <button className="btn-secondary" onClick={() => scrollTo("Contact")}>Get In Touch</button>
           </div>
 
-          <div style={{
-            display: "flex", gap: 32, marginTop: 72, flexWrap: "wrap",
-            opacity: heroVisible ? 1 : 0, transition: "all 0.9s ease 0.6s",
-          }}>
+          <div className="hero-stats" style={{ opacity: heroVisible ? 1 : 0, transition: "all 0.9s ease 0.6s" }}>
             {[["CS", "Graduate 2025"], ["3", "Projects Built"], ["6+", "Technologies"], ["∞", "Curiosity"]].map(([n, l]) => (
               <div key={l}>
-                <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 30, color: ACCENT }}>{n}</div>
-                <div style={{ color: "#6b7280", fontSize: 13, fontFamily: "'JetBrains Mono', monospace" }}>{l}</div>
+                <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 28, color: ACCENT }}>{n}</div>
+                <div style={{ color: "#6b7280", fontSize: 12, fontFamily: "'JetBrains Mono', monospace" }}>{l}</div>
               </div>
             ))}
           </div>
@@ -418,36 +440,24 @@ export default function Portfolio() {
       </section>
 
       {/* ABOUT */}
-      <section id="about" style={{ position: "relative", padding: "100px 48px" }}>
+      <section id="about" className="section-pad">
         <div style={{ maxWidth: 1100, margin: "0 auto" }} ref={aboutRef}>
-          <div style={styles.sectionLabel}>About Me</div>
-          <div style={{
-            display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: 60, alignItems: "center", marginTop: 16,
-          }}>
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600, color: ACCENT, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>About Me</div>
+          <div className="about-grid" style={{ marginTop: 16 }}>
             <div>
-              <h2 style={{ ...styles.sectionTitle, marginBottom: 20 }}>
-                A fresher who<br />
-                <span style={{ color: ACCENT }}>builds end to end</span>
+              <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(28px, 5vw, 48px)", lineHeight: 1.1, marginBottom: 20 }}>
+                A fresher who<br /><span style={{ color: ACCENT }}>builds end to end</span>
               </h2>
-              <p style={{ color: "#9ca3af", fontSize: 16, lineHeight: 1.8, marginBottom: 18 }}>
-                I'm a Computer Science graduate with a strong foundation in full-stack development.
-                I enjoy building things from scratch — designing React UIs, wiring up Spring Boot
-                REST APIs, and thinking through database schemas in MySQL.
+              <p style={{ color: "#9ca3af", fontSize: 15, lineHeight: 1.8, marginBottom: 16 }}>
+                I'm a Computer Science graduate with a strong foundation in full-stack development. I enjoy building things from scratch — designing React UIs, wiring up Spring Boot REST APIs, and thinking through database schemas in MySQL.
               </p>
-              <p style={{ color: "#9ca3af", fontSize: 16, lineHeight: 1.8, marginBottom: 32 }}>
-                I'm actively looking for internship or entry-level opportunities where I can learn
-                fast, contribute meaningfully, and grow alongside a great team.
+              <p style={{ color: "#9ca3af", fontSize: 15, lineHeight: 1.8, marginBottom: 28 }}>
+                I'm actively looking for internship or entry-level opportunities where I can learn fast, contribute meaningfully, and grow alongside a great team.
               </p>
-              <div style={{ display: "flex", gap: 16 }}>
-                <button className="btn-primary" style={{ fontSize: 14, padding: "12px 24px" }}>
-                  Download CV
-                </button>
-              </div>
+              <button className="btn-primary" style={{ fontSize: 14, padding: "12px 24px" }}>Download CV</button>
             </div>
 
-            <div style={{
-              display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14,
+            <div className="about-cards" style={{
               opacity: aboutInView ? 1 : 0, transform: aboutInView ? "translateX(0)" : "translateX(30px)",
               transition: "all 0.8s ease 0.2s",
             }}>
@@ -457,16 +467,10 @@ export default function Portfolio() {
                 { icon: "⛁", label: "Database", sub: "MySQL & SQL", c: "#00758f" },
                 { icon: "⎇", label: "Version Control", sub: "Git & GitHub", c: ACCENT2 },
               ].map(({ icon, label, sub, c }) => (
-                <div key={label} style={{
-                  padding: "22px 18px", borderRadius: 16,
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.07)",
-                  textAlign: "center",
-                  transition: "border-color 0.3s",
-                }}>
-                  <div style={{ fontSize: 28, marginBottom: 10, color: c, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>{icon}</div>
-                  <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{label}</div>
-                  <div style={{ color: "#6b7280", fontSize: 12 }}>{sub}</div>
+                <div key={label} style={{ padding: "20px 16px", borderRadius: 16, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", textAlign: "center" }}>
+                  <div style={{ fontSize: 26, marginBottom: 10, color: c, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>{icon}</div>
+                  <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 4 }}>{label}</div>
+                  <div style={{ color: "#6b7280", fontSize: 11 }}>{sub}</div>
                 </div>
               ))}
             </div>
@@ -475,14 +479,12 @@ export default function Portfolio() {
       </section>
 
       {/* SKILLS */}
-      <section id="skills" style={{ padding: "100px 48px", background: "rgba(255,255,255,0.015)" }}>
+      <section id="skills" className="section-pad" style={{ background: "rgba(255,255,255,0.015)" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }} ref={skillsRef}>
-          <div style={styles.sectionLabel}>Technical Skills</div>
-          <h2 style={{ ...styles.sectionTitle, marginBottom: 8 }}>My Tech Stack</h2>
-          <p style={{ color: "#6b7280", fontSize: 16, marginBottom: 48 }}>
-            Technologies I've studied, practiced, and built real projects with.
-          </p>
-          <div className="grid-2">
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600, color: ACCENT, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>Technical Skills</div>
+          <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(28px, 5vw, 48px)", lineHeight: 1.1, marginBottom: 8 }}>My Tech Stack</h2>
+          <p style={{ color: "#6b7280", fontSize: 15, marginBottom: 40 }}>Technologies I've studied, practiced, and built real projects with.</p>
+          <div className="skills-grid">
             {SKILLS.map((s, i) => (
               <SkillBar key={s.name} {...s} inView={skillsInView} delay={i * 80} />
             ))}
@@ -491,14 +493,12 @@ export default function Portfolio() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projects" style={{ padding: "100px 48px" }}>
+      <section id="projects" className="section-pad">
         <div style={{ maxWidth: 1100, margin: "0 auto" }} ref={projRef}>
-          <div style={styles.sectionLabel}>Projects</div>
-          <h2 style={{ ...styles.sectionTitle, marginBottom: 8 }}>Things I've Built</h2>
-          <p style={{ color: "#6b7280", fontSize: 16, marginBottom: 48 }}>
-            Projects I've designed and built end-to-end — each one solving a real problem.
-          </p>
-          <div className="grid-3">
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600, color: ACCENT, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>Projects</div>
+          <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(28px, 5vw, 48px)", lineHeight: 1.1, marginBottom: 8 }}>Things I've Built</h2>
+          <p style={{ color: "#6b7280", fontSize: 15, marginBottom: 40 }}>Projects I've designed and built end-to-end — each one solving a real problem.</p>
+          <div className="projects-grid">
             {PROJECTS.map((p, i) => (
               <ProjectCard key={p.title} {...p} inView={projInView} delay={i * 120} />
             ))}
@@ -507,52 +507,45 @@ export default function Portfolio() {
       </section>
 
       {/* CONTACT */}
-      <section id="contact" style={{ padding: "100px 48px", position: "relative", overflow: "hidden" }}>
-        <Orb style={{ width: 400, height: 400, background: `${ACCENT}12`, bottom: -100, right: -100 }} />
-        <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }} ref={contactRef}>
-          <div style={styles.sectionLabel}>Contact</div>
-          <h2 style={{ ...styles.sectionTitle, marginBottom: 16 }}>
-            Let's Work<br />
-            <span style={{ color: ACCENT }}>Together</span>
+      <section id="contact" className="section-pad" style={{ position: "relative", overflow: "hidden" }}>
+        <Orb style={{ width: 350, height: 350, background: `${ACCENT}10`, bottom: -80, right: -80 }} />
+        <div style={{ maxWidth: 660, margin: "0 auto", textAlign: "center" }} ref={contactRef}>
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fontWeight: 600, color: ACCENT, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 12 }}>Contact</div>
+          <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(28px, 5vw, 48px)", lineHeight: 1.1, marginBottom: 16 }}>
+            Let's Work<br /><span style={{ color: ACCENT }}>Together</span>
           </h2>
-          <p style={{ color: "#6b7280", fontSize: 16, lineHeight: 1.75, marginBottom: 52 }}>
-            I'm actively looking for internship or entry-level roles.
-            If you have an opportunity or just want to connect — my inbox is always open.
+          <p style={{ color: "#6b7280", fontSize: 15, lineHeight: 1.75, marginBottom: 44 }}>
+            I'm actively looking for internship or entry-level roles. If you have an opportunity or just want to connect — my inbox is always open.
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {CONTACT.map(({ label, value, icon, href }, i) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="contact-card"
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="contact-card"
                 style={{
-                  display: "flex", alignItems: "center", gap: 16, padding: "18px 24px",
+                  display: "flex", alignItems: "center", gap: 14, padding: "16px 20px",
                   borderRadius: 14, border: "1px solid rgba(255,255,255,0.07)",
                   background: "rgba(255,255,255,0.025)",
                   opacity: contactInView ? 1 : 0,
                   transform: contactInView ? "translateY(0)" : "translateY(20px)",
                   transition: `all 0.6s ease ${i * 100}ms, border-color 0.25s, background 0.25s`,
-                  cursor: "pointer", textAlign: "left", textDecoration: "none",
+                  cursor: "pointer", textAlign: "left", textDecoration: "none", minWidth: 0,
                 }}
               >
                 <div style={{
-                  width: 42, height: 42, borderRadius: 10, flexShrink: 0,
+                  width: 40, height: 40, borderRadius: 10, flexShrink: 0,
                   background: `${ACCENT}15`, display: "flex", alignItems: "center",
                   justifyContent: "center", color: ACCENT,
-                  fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: 14,
+                  fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, fontSize: 13,
                 }}>{icon}</div>
-                <div>
-                  <div style={{ color: "#6b7280", fontSize: 12, fontFamily: "'JetBrains Mono', monospace", marginBottom: 2 }}>{label}</div>
-                  <div style={{ color: "#e8eaf0", fontWeight: 500, fontSize: 15 }}>{value}</div>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ color: "#6b7280", fontSize: 11, fontFamily: "'JetBrains Mono', monospace", marginBottom: 2 }}>{label}</div>
+                  <div style={{ color: "#e8eaf0", fontWeight: 500, fontSize: 14, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{value}</div>
                 </div>
-                <div style={{ marginLeft: "auto", color: "#4b5563", fontSize: 18 }}>→</div>
+                <div style={{ marginLeft: "auto", color: "#4b5563", fontSize: 16, flexShrink: 0 }}>→</div>
               </a>
             ))}
           </div>
           <a href="mailto:aa30340a@gmail.com" style={{ textDecoration: "none" }}>
-            <button className="btn-primary" style={{ marginTop: 36, width: "100%", padding: "16px" }}>
+            <button className="btn-primary" style={{ marginTop: 32, width: "100%", padding: "15px" }}>
               Send Me a Message ✉
             </button>
           </a>
@@ -561,9 +554,9 @@ export default function Portfolio() {
 
       {/* FOOTER */}
       <footer style={{
-        textAlign: "center", padding: "28px 48px",
+        textAlign: "center", padding: "24px 20px",
         borderTop: "1px solid rgba(255,255,255,0.06)",
-        color: "#4b5563", fontSize: 13, fontFamily: "'JetBrains Mono', monospace",
+        color: "#4b5563", fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
       }}>
         <span>Designed & built by </span>
         <span style={{ color: ACCENT }}>Abhishek Singh</span>
